@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Octell - AI Health Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #1a2a6c;
+            --secondary: #2a3a8c;
+            --accent: #4cc9f0;
+            --light: #f0f4ff;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #f44336;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            animation: containerSlideIn 1s ease-out;
+            position: relative;
+        }
+        
+        @keyframes containerSlideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .logo i {
+            font-size: 40px;
+            color: var(--primary);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+            min-height: 450px;
+            position: relative;
+        }
+        
+        .step {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question {
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            color: var(--primary);
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option-btn {
+            padding: 18px 20px;
+            background-color: var(--light);
+            border: 2px solid #d0d8ff;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .option-btn:hover:before {
+            left: 100%;
+        }
+        
+        .option-btn:hover {
+            background-color: #e0e8ff;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .option-btn.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+        
+        .option-icon {
+            margin-right: 15px;
+            font-size: 1.3rem;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .nav-btn {
+            padding: 14px 28px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(26, 42, 108, 0.3);
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(26, 42, 108, 0.4);
+        }
+        
+        .nav-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .nav-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .nav-btn i {
+            margin-right: 8px;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            background-color: var(--light);
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            width: 0%;
+            transition: width 0.7s ease;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: linear-gradient(
+                -45deg, 
+                rgba(255, 255, 255, 0.2) 25%, 
+                transparent 25%, 
+                transparent 50%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0.2) 75%, 
+                transparent 75%, 
+                transparent
+            );
+            z-index: 1;
+            background-size: 50px 50px;
+            animation: move 2s linear infinite;
+            border-radius: 10px;
+        }
+        
+        @keyframes move {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+        
+        .result {
+            padding: 25px;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+            animation: resultSlideIn 0.7s ease-out;
+            border-left: 5px solid var(--accent);
+        }
+        
+        @keyframes resultSlideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result h3 i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .medicine-recommendation {
+            background: linear-gradient(to right, #e8f4ff, #f0f9ff);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 1px solid #c2e0ff;
+            line-height: 1.6;
+        }
+        
+        .medicine-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .medicine-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .medicine-details {
+            flex: 1;
+        }
+        
+        .medicine-name {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .medicine-purpose {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .disclaimer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            background-color: #fafafa;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .symptom-visual {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .symptom-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .robot-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            z-index: 10;
+        }
+        
+        .robot {
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: robotFloat 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes robotFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .robot-chat {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 200px;
+            margin-bottom: 15px;
+            display: none;
+            animation: chatFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes chatFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .robot-chat:after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            right: 20px;
+            border: 10px solid transparent;
+            border-top-color: white;
+        }
+        
+        .intro-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            animation: introFadeOut 0.5s ease-out 3s forwards;
+        }
+        
+        @keyframes introFadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+        
+        .intro-logo {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: introLogo 2s ease-in-out;
+        }
+        
+        @keyframes introLogo {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        
+        .intro-title {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            animation: introTitle 1s ease-out 0.5s both;
+        }
+        
+        @keyframes introTitle {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .intro-tagline {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            animation: introTagline 1s ease-out 1s both;
+        }
+        
+        @keyframes introTagline {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .loading-bar {
+            width: 200px;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            background: white;
+            width: 0%;
+            border-radius: 3px;
+            animation: loading 3s ease-in-out;
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        .feature-highlight {
+            background: linear-gradient(to right, #fff8e1, #fff);
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-icon {
+            font-size: 1.8rem;
+            margin-right: 15px;
+            color: var(--warning);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            opacity: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .question {
+                font-size: 1.4rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .robot-container {
+                display: none;
+            }
+            
+            .intro-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="intro-screen">
+            <div class="intro-logo">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h1 class="intro-title">Octell</h1>
+            <p class="intro-tagline">Your AI Health Assistant</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+        
+        <header>
+            <div class="header-decoration"></div>
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h1>Octell</h1>
+                    <p class="tagline">AI-Powered Symptom Assessment</p>
+                </div>
+            </div>
+        </header>
+        
+        <div class="content" id="content">
+            <!-- Content will be dynamically updated by JavaScript -->
+        </div>
+        
+        <div class="robot-container">
+            <div class="robot">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="robot-chat" id="robot-chat">
+                Hello! I'm Octo, your health assistant. I'm here to help you feel better!
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            <p><strong>Disclaimer:</strong> This tool is for informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+        </div>
+    </div>
+
+    <script>
+        // Algorithm data structure
+        const algorithm = {
+            // Initial greeting
+            "start": {
+                question: "Hello! I'm Octell, your AI health assistant. Can I help you today?",
+                options: [
+                    { text: "Yes, I'm not feeling well", next: "unwell", icon: "fas fa-frown" },
+                    { text: "No, I'm just browsing", next: "end_no_help", icon: "fas fa-smile" }
+                ]
+            },
+            
+            // User doesn't need help
+            "end_no_help": {
+                question: "Great! Have a wonderful day!",
+                options: []
+            },
+            
+            // Check if user is feeling unwell
+            "unwell": {
+                question: "I'm sorry to hear that. Are you feeling unwell?",
+                options: [
+                    { text: "Yes, I have symptoms", next: "symptom_category", icon: "fas fa-thermometer-half" },
+                    { text: "No, I'm just curious", next: "end_no_help", icon: "fas fa-question" }
+                ]
+            },
+            
+            // Symptom category selection
+            "symptom_category": {
+                question: "What category best describes your main concern?",
+                options: [
+                    { text: "Respiratory (cough, congestion, sore throat)", next: "respiratory", icon: "fas fa-lungs" },
+                    { text: "Digestive (stomach pain, nausea, diarrhea)", next: "digestive", icon: "fas fa-stomach" },
+                    { text: "Pain (headache, body aches, joint pain)", next: "pain", icon: "fas fa-head-side-virus" },
+                    { text: "Allergy (sneezing, itchy eyes, rash)", next: "allergy", icon: "fas fa-allergies" },
+                    { text: "Other symptoms", next: "other_symptoms", icon: "fas fa-plus-circle" }
+                ]
+            },
+            
+            // Respiratory symptoms
+            "respiratory": {
+                question: "Which respiratory symptoms are you experiencing?",
+                visual: "fas fa-lungs-virus",
+                options: [
+                    { text: "Runny or stuffy nose", next: "respiratory_nose", icon: "fas fa-wind" },
+                    { text: "Cough", next: "respiratory_cough", icon: "fas fa-cough" },
+                    { text: "Sore throat", next: "respiratory_throat", icon: "fas fa-temperature-high" },
+                    { text: "Congestion in chest", next: "respiratory_chest", icon: "fas fa-weight" },
+                    { text: "Multiple symptoms", next: "respiratory_multiple", icon: "fas fa-clipboard-list" }
+                ]
+            },
+            
+            // Runny/stuffy nose follow-up
+            "respiratory_nose": {
+                question: "Tell me more about your nasal symptoms:",
+                visual: "fas fa-wind",
+                options: [
+                    { text: "Runny nose with clear discharge", next: "respiratory_nose_clear", icon: "fas fa-tint" },
+                    { text: "Stuffy nose with thick yellow/green mucus", next: "respiratory_nose_thick", icon: "fas fa-cloud" },
+                    { text: "Sneezing frequently", next: "respiratory_nose_sneezing", icon: "fas fa-wind" },
+                    { text: "Itchy nose and eyes", next: "allergy_nose", icon: "fas fa-allergies" }
+                ]
+            },
+            
+            "respiratory_nose_clear": {
+                question: "How long have you had these symptoms?",
+                options: [
+                    { text: "Less than 3 days", next: "result_cold_meds", icon: "fas fa-calendar-minus" },
+                    { text: "More than 3 days", next: "respiratory_nose_duration_long", icon: "fas fa-calendar" },
+                    { text: "More than 10 days", next: "recommend_doctor", icon: "fas fa-calendar-plus" }
+                ]
+            },
+            
+            "respiratory_nose_thick": {
+                question: "Do you have facial pain or pressure?",
+                options: [
+                    { text: "Yes", next: "recommend_doctor", icon: "fas fa-exclamation-triangle" },
+                    { text: "No", next: "result_sinus_meds", icon: "fas fa-check-circle" }
+                ]
+            },
+            
+            // Cough follow-up
+            "respiratory_cough": {
+                question: "What type of cough do you have?",
+                visual: "fas fa-cough",
+                options: [
+                    { text: "Dry, tickly cough", next: "respiratory_cough_dry", icon: "fas fa-wind" },
+                    { text: "Cough with phlegm/mucus", next: "respiratory_cough_phlegm", icon: "fas fa-cloud" },
+                    { text: "Cough that worsens at night", next: "respiratory_cough_night", icon: "fas fa-moon" }
+                ]
+            },
+            
+            "respiratory_cough_dry": {
+                question: "How long have you had this cough?",
+                options: [
+                    { text: "Less than a week", next: "result_cough_suppressant", icon: "fas fa-calendar-minus" },
+                    { text: "More than a week", next: "recommend_doctor", icon: "fas fa-calendar" },
+                    { text: "More than 3 weeks", next: "recommend_doctor_urgent", icon: "fas fa-calendar-plus" }
+                ]
+            },
+            
+            // Results and recommendations
+            "result_cold_meds": {
+                question: "Based on your symptoms, I recommend:",
+                result: true,
+                recommendation: `
+                    <div class="medicine-item">
+                        <div class="medicine-icon">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <div class="medicine-details">
+                            <div class="medicine-name">Cold & Flu Relief</div>
+                            <div class="medicine-purpose">For nasal congestion, cough, and general cold symptoms</div>
+                        </div>
+                    </div>
+                    <div class="medicine-item">
+                        <div class="medicine-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="medicine-details">
+                            <div class="medicine-name">Saline Nasal Spray</div>
+                            <div class="medicine-purpose">To moisturize nasal passages and relieve dryness</div>
+                        </div>
+                    </div>
+                    <p><strong>Also consider:</strong> Rest, hydration, and a humidifier for comfort.</p>
+                `
+            },
+            
+            "result_sinus_meds": {
+                question: "Based on your symptoms, I recommend:",
+                result: true,
+                recommendation: `
+                    <div class="medicine-item">
+                        <div class="medicine-icon">
+                            <i class="fas fa-head-side-virus"></i>
+                        </div>
+                        <div class="medicine-details">
+                            <div class="medicine-name">Sinus Relief Medication</div>
+                            <div class="medicine-purpose">For sinus pressure and congestion</div>
+                        </div>
+                    </div>
+                    <div class="medicine-item">
+                        <div class="medicine-icon">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <div class="medicine-details">
+                            <div class="medicine-name">Mucinex</div>
+                            <div class="medicine-purpose">To thin and loosen mucus</div>
+                        </div>
+                    </div>
+                    <p><strong>Also consider:</strong> Steam inhalation and warm compresses over sinus areas.</p>
+                `
+            },
+            
+            "result_cough_suppressant": {
+                question: "Based on your symptoms, I recommend:",
+                result: true,
+                recommendation: `
+                    <div class="medicine-item">
+                        <div class="medicine-icon">
+                            <i class="fas fa-cough"></i>
+                        </div>
+                        <div class="medicine-details">
+                            <div class="medicine-name">Cough Suppressant</div>
+                            <div class="medicine-purpose">For dry, tickly cough</div>
+                        </div>
+                    </div>
+                    <div class="medicine-item">
+                        <div class="medicine-icon">
+                            <i class="fas fa-candy-cane"></i>
+                        </div>
+                        <div class="medicine-details">
+                            <div class="medicine-name">Cough Drops</div>
+                            <div class="medicine-purpose">For temporary relief of minor throat irritation</div>
+                        </div>
+                    </div>
+                    <p><strong>Also consider:</strong> Honey in warm tea, and staying hydrated.</p>
+                `
+            },
+            
+            // Doctor recommendations
+            "recommend_doctor": {
+                question: "Based on your symptoms, I recommend:",
+                result: true,
+                recommendation: `
+                    <div class="feature-highlight">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div>
+                            <strong>Consult a Healthcare Professional</strong><br>
+                            Your symptoms may require evaluation by a doctor.
+                        </div>
+                    </div>
+                    <p>In the meantime, you can try:</p>
+                    <div class="medicine-item">
+                        <div class="medicine-icon">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <div class="medicine-details">
+                            <div class="medicine-name">Pain Reliever</div>
+                            <div class="medicine-purpose">For pain or fever (acetaminophen or ibuprofen)</div>
+                        </div>
+                    </div>
+                    <p><strong>Seek immediate medical attention if you develop:</strong><br>
+                    • Difficulty breathing<br>
+                    • High fever (over 102°F/39°C)<br>
+                    • Severe pain<br>
+                    • Symptoms that worsen suddenly</p>
+                `
+            },
+            
+            "recommend_doctor_urgent": {
+                question: "Based on your symptoms, I recommend:",
+                result: true,
+                recommendation: `
+                    <div class="feature-highlight">
+                        <div class="feature-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div>
+                            <strong>Schedule a Doctor's Appointment</strong><br>
+                            Your symptoms have persisted and need professional evaluation.
+                        </div>
+                    </div>
+                    <p>In the meantime, you can try:</p>
+                    <div class="medicine-item">
+                        <div class="medicine-icon">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <div class="medicine-details">
+                            <div class="medicine-name">Mucinex</div>
+                            <div class="medicine-purpose">For chest congestion</div>
+                        </div>
+                    </div>
+                    <div class="medicine-item">
+                        <div class="medicine-icon">
+                            <i class="fas fa-cough"></i>
+                        </div>
+                        <div class="medicine-details">
+                            <div class="medicine-name">Cough Medicine</div>
+                            <div class="medicine-purpose">For cough at night</div>
+                        </div>
+                    </div>
+                    <p><strong>Also consider:</strong> Honey in warm tea for throat irritation.</p>
+                `
+            }
+        };
+
+        // Application state
+        let currentStep = "start";
+        let history = [];
+        const app = {
+            init() {
+                // Show intro for 3 seconds then start the app
+                setTimeout(() => {
+                    this.renderStep(currentStep);
+                    this.setupEventListeners();
+                    this.setupRobot();
+                    this.createConfetti(30);
+                }, 3000);
+            },
+            
+            renderStep(stepId) {
+                const step = algorithm[stepId];
+                const content = document.getElementById('content');
+                
+                if (!step) {
+                    content.innerHTML = '<div class="question">Sorry, there was an error. Please refresh the page.</div>';
+                    return;
+                }
+                
+                let html = `<div class="step">`;
+                
+                // Progress bar
+                const progress = this.calculateProgress();
+                html += `<div class="progress-container"><div class="progress-bar" style="width: ${progress}%"></div></div>`;
+                
+                // Visual for symptoms if available
+                if (step.visual) {
+                    html += `<div class="symptom-visual">
+                                <div class="symptom-icon">
+                                    <i class="${step.visual}"></i>
+                                </div>
+                            </div>`;
+                }
+                
+                // Question
+                html += `<div class="question">${step.question}</div>`;
+                
+                // Options or result
+                if (step.result) {
+                    html += `<div class="result">
+                                <h3><i class="fas fa-pills"></i> Recommendation</h3>
+                                <div class="medicine-recommendation">${step.recommendation}</div>
+                            </div>`;
+                    
+                    // Restart button
+                    html += `<div class="nav-buttons">
+                                <button class="nav-btn" id="restart-btn"><i class="fas fa-redo"></i> Start Over</button>
+                            </div>`;
+                } else {
+                    html += `<div class="options" id="options-container">`;
+                    
+                    step.options.forEach((option, index) => {
+                        html += `<button class="option-btn" data-next="${option.next}">
+                                    <div class="option-icon"><i class="${option.icon}"></i></div>
+                                    <div>${option.text}</div>
+                                </button>`;
+                    });
+                    
+                    html += `</div>`;
+                    
+                    // Navigation buttons
+                    html += `<div class="nav-buttons">
+                                <button class="nav-btn" id="back-btn" ${history.length === 0 ? 'disabled' : ''}><i class="fas fa-arrow-left"></i> Back</button>
+                                <button class="nav-btn" id="next-btn" disabled><i class="fas fa-arrow-right"></i> Next</button>
+                            </div>`;
+                }
+                
+                html += `</div>`;
+                content.innerHTML = html;
+                
+                // Set up event listeners for this step
+                this.setupStepEventListeners();
+            },
+            
+            setupStepEventListeners() {
+                const step = algorithm[currentStep];
+                
+                if (step.result) {
+                    // Result page - only restart button
+                    document.getElementById('restart-btn').addEventListener('click', () => {
+                        this.restart();
+                    });
+                } else {
+                    // Regular step - option selection
+                    const optionButtons = document.querySelectorAll('.option-btn');
+                    const nextButton = document.getElementById('next-btn');
+                    
+                    optionButtons.forEach(button => {
+                        button.addEventListener('click', () => {
+                            // Remove selected class from all buttons
+                            optionButtons.forEach(btn => btn.classList.remove('selected'));
+                            // Add selected class to clicked button
+                            button.classList.add('selected');
+                            // Enable next button
+                            nextButton.disabled = false;
+                        });
+                    });
+                    
+                    // Next button
+                    nextButton.addEventListener('click', () => {
+                        const selectedOption = document.querySelector('.option-btn.selected');
+                        if (selectedOption) {
+                            history.push(currentStep);
+                            currentStep = selectedOption.dataset.next;
+                            this.renderStep(currentStep);
+                            this.createConfetti(5);
+                        }
+                    });
+                    
+                    // Back button
+                    document.getElementById('back-btn').addEventListener('click', () => {
+                        if (history.length > 0) {
+                            currentStep = history.pop();
+                            this.renderStep(currentStep);
+                        }
+                    });
+                }
+            },
+            
+            setupEventListeners() {
+                // Global event listeners if needed
+            },
+            
+            setupRobot() {
+                const robot = document.querySelector('.robot');
+                const chat = document.getElementById('robot-chat');
+                
+                robot.addEventListener('click', () => {
+                    if (chat.style.display === 'block') {
+                        chat.style.display = 'none';
+                    } else {
+                        // Random helpful messages
+                        const messages = [
+                            "Remember to drink plenty of water!",
+                            "Rest is important when you're not feeling well.",
+                            "I hope my recommendations help you feel better!",
+                            "Always read medication labels carefully.",
+                            "Don't hesitate to consult a doctor if symptoms persist.",
+                            "I'm here to help with any health questions!"
+                        ];
+                        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                        chat.innerHTML = randomMessage;
+                        chat.style.display = 'block';
+                        
+                        // Auto-hide after 5 seconds
+                        setTimeout(() => {
+                            chat.style.display = 'none';
+                        }, 5000);
+                    }
+                });
+            },
+            
+            calculateProgress() {
+                const totalSteps = Object.keys(algorithm).length;
+                const completedSteps = history.length + 1; // +1 for current step
+                
+                // Cap at 95% until final recommendation
+                return Math.min(95, (completedSteps / totalSteps) * 100);
+            },
+            
+            restart() {
+                currentStep = "start";
+                history = [];
+                this.renderStep(currentStep);
+                this.createConfetti(20);
+            },
+            
+            createConfetti(count) {
+                const container = document.querySelector('.container');
+                
+                for (let i = 0; i < count; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-10px';
+                    confetti.style.backgroundColor = this.getRandomColor();
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    confetti.style.width = Math.random() * 10 + 5 + 'px';
+                    confetti.style.height = Math.random() * 10 + 5 + 'px';
+                    
+                    container.appendChild(confetti);
+                    
+                    // Animate confetti
+                    const animation = confetti.animate([
+                        { top: '-10px', opacity: 1, transform: `rotate(0deg)` },
+                        { top: '100%', opacity: 0, transform: `rotate(${Math.random() * 360}deg)` }
+                    ], {
+                        duration: Math.random() * 3000 + 2000,
+                        easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                    });
+                    
+                    animation.onfinish = () => {
+                        confetti.remove();
+                    };
+                }
+            },
+            
+            getRandomColor() {
+                const colors = ['#4cc9f0', '#4361ee', '#3a0ca3', '#7209b7', '#f72585'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+        };
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
